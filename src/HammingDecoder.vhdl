@@ -34,9 +34,9 @@ begin
     group2 <= DataIn(1) xor DataIn(2) xor DataIn(5) xor DataIn(6);
     group3 <= DataIn(3) xor DataIn(4) xor DataIn(5) xor DataIn(6);
 
-    DataOut(0) <= ((not group1) and group2       and group3)       xor DataIn(2);
+    DataOut(0) <= (group1       and group2       and (not group3)) xor DataIn(2);
     DataOut(1) <= (group1       and (not group2) and group3)       xor DataIn(4);
-    DataOut(2) <= (group1       and group2       and (not group3)) xor DataIn(5);
+    DataOut(2) <= ((not group1) and group2       and group3)       xor DataIn(5);
     DataOut(3) <= (group1       and group2       and group3)       xor DataIn(6);
 
 end architecture;

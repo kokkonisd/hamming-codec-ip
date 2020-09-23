@@ -172,9 +172,9 @@ begin
         wait for 1 ns;
         assert DataOut = "1111" report "DataOut is wrong for input '1111111'" severity error;
 
-        DataIn <= "1111101";
+        DataIn <= "1111011";
         wait for 1 ns;
-        assert DataOut = "1111" report "DataOut is wrong for noisy input '1111101'" severity error;
+        assert DataOut = "1111" report "DataOut is wrong for noisy input '1111011'" severity error;
     end process;
 
 end architecture;
