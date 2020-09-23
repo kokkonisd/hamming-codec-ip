@@ -28,18 +28,18 @@ architecture default of HammingEncoder is
 begin
 
     -- The output vector has as follows (D are data bits, P are parity bits):
-    -- [MSB] D3 D2 D1 P2 D0 P1 P0 [LSB]
+    -- [MSB] P2 P1 P0 D3 D2 D1 D0 [LSB]
     --
-    -- where: P0 = D0 xor D2 xor D3
+    -- where: P0 = D0 xor D1 xor D3
     --        P1 = D0 xor D2 xor D3
     --        P2 = D1 xor D2 xor D3
-    
-    DataOut(0) <= DataIn(0) xor DataIn(1) xor DataIn(3);
-    DataOut(1) <= DataIn(0) xor DataIn(2) xor DataIn(3);
-    DataOut(2) <= DataIn(0);
-    DataOut(3) <= DataIn(1) xor DataIn(2) xor DataIn(3);
-    DataOut(4) <= DataIn(1);
-    DataOut(5) <= DataIn(2);
-    DataOut(6) <= DataIn(3);
+
+    DataOut(0) <= DataIn(0);
+    DataOut(1) <= DataIn(1);
+    DataOut(2) <= DataIn(2);
+    DataOut(3) <= DataIn(3);
+    DataOut(4) <= DataIn(0) xor DataIn(1) xor DataIn(3);
+    DataOut(5) <= DataIn(0) xor DataIn(2) xor DataIn(3);
+    DataOut(6) <= DataIn(1) xor DataIn(2) xor DataIn(3);
 
 end architecture;

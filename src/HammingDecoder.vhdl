@@ -29,18 +29,22 @@ architecture default of HammingDecoder is
 begin
 
     -- The input vector has as follows (D are data bits, P are parity bits):
-    -- [MSB] D3 D2 D1 P2 D0 P1 P0 [LSB]
-    group1 <= DataIn(0) xor DataIn(2) xor DataIn(4) xor DataIn(6);
-    group2 <= DataIn(1) xor DataIn(2) xor DataIn(5) xor DataIn(6);
-    group3 <= DataIn(3) xor DataIn(4) xor DataIn(5) xor DataIn(6);
+    -- [MSB] P2 P1 P0 D3 D2 D1 D0 [LSB]
+    --
+    -- where: P0 = D0 xor D1 xor D3
+    --        P1 = D0 xor D2 xor D3
+    --        P2 = D1 xor D2 xor D3
+    group1 <= DataIn(0) xor DataIn(1) xor DataIn(3) xor DataIn(4);
+    group2 <= DataIn(0) xor DataIn(2) xor DataIn(3) xor DataIn(5);
+    group3 <= DataIn(1) xor DataIn(2) xor DataIn(3) xor DataIn(6);
 
     -- If groups 1 and 2 are triggered, D0 must be flipped
-    DataOut(0) <= (group1       and group2       and (not group3)) xor DataIn(2);
+    DataOut(0) <= (group1       and group2       and (not group3)) xor DataIn(0);
     -- If groups 1 and 3 are triggered, D1 must be flipped
-    DataOut(1) <= (group1       and (not group2) and group3)       xor DataIn(4);
+    DataOut(1) <= (group1       and (not group2) and group3)       xor DataIn(1);
     -- If groups 2 and 3 are triggered, D2 must be flipped
-    DataOut(2) <= ((not group1) and group2       and group3)       xor DataIn(5);
+    DataOut(2) <= ((not group1) and group2       and group3)       xor DataIn(2);
     -- If all groups are triggered, D3 must be flipped
-    DataOut(3) <= (group1       and group2       and group3)       xor DataIn(6);
+    DataOut(3) <= (group1       and group2       and group3)       xor DataIn(3);
 
 end architecture;

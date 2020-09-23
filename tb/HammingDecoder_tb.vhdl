@@ -37,7 +37,7 @@ begin
         end loop;
 
 
-        DataIn <= "0000111";
+        DataIn <= "0110001";
         wait for 1 ns;
         assert DataOut = "0001" report "DataOut is wrong for input '0000111'" severity error;
 
@@ -50,7 +50,7 @@ begin
         end loop;
 
 
-        DataIn <= "0011001";
+        DataIn <= "1010010";
         wait for 1 ns;
         assert DataOut = "0010" report "DataOut is wrong for input '0011001'" severity error;
 
@@ -63,7 +63,7 @@ begin
         end loop;
 
 
-        DataIn <= "0011110";
+        DataIn <= "1100011";
         wait for 1 ns;
         assert DataOut = "0011" report "DataOut is wrong for input '0011110'" severity error;
 
@@ -76,7 +76,7 @@ begin
         end loop;
 
 
-        DataIn <= "0101010";
+        DataIn <= "1100100";
         wait for 1 ns;
         assert DataOut = "0100" report "DataOut is wrong for input '0101010'" severity error;
 
@@ -89,7 +89,7 @@ begin
         end loop;
 
 
-        DataIn <= "0101101";
+        DataIn <= "1010101";
         wait for 1 ns;
         assert DataOut = "0101" report "DataOut is wrong for input '0101101'" severity error;
 
@@ -102,7 +102,7 @@ begin
         end loop;
 
 
-        DataIn <= "0110011";
+        DataIn <= "0110110";
         wait for 1 ns;
         assert DataOut = "0110" report "DataOut is wrong for input '0110011'" severity error;
 
@@ -115,7 +115,7 @@ begin
         end loop;
 
 
-        DataIn <= "0110100";
+        DataIn <= "0000111";
         wait for 1 ns;
         assert DataOut = "0111" report "DataOut is wrong for input '0110100'" severity error;
 
@@ -128,7 +128,7 @@ begin
         end loop;
 
 
-        DataIn <= "1001011";
+        DataIn <= "1111000";
         wait for 1 ns;
         assert DataOut = "1000" report "DataOut is wrong for input '1001011'" severity error;
 
@@ -141,7 +141,7 @@ begin
         end loop;
 
 
-        DataIn <= "1001100";
+        DataIn <= "1001001";
         wait for 1 ns;
         assert DataOut = "1001" report "DataOut is wrong for input '1001100'" severity error;
 
@@ -154,7 +154,7 @@ begin
         end loop;
 
 
-        DataIn <= "1010010";
+        DataIn <= "0101010";
         wait for 1 ns;
         assert DataOut = "1010" report "DataOut is wrong for input '1010010'" severity error;
 
@@ -167,7 +167,7 @@ begin
         end loop;
 
 
-        DataIn <= "1010101";
+        DataIn <= "0011011";
         wait for 1 ns;
         assert DataOut = "1011" report "DataOut is wrong for input '1010101'" severity error;
 
@@ -180,7 +180,7 @@ begin
         end loop;
 
 
-        DataIn <= "1100001";
+        DataIn <= "0011100";
         wait for 1 ns;
         assert DataOut = "1100" report "DataOut is wrong for input '1100001'" severity error;
 
@@ -193,7 +193,7 @@ begin
         end loop;
 
 
-        DataIn <= "1100110";
+        DataIn <= "0101101";
         wait for 1 ns;
         assert DataOut = "1101" report "DataOut is wrong for input '1100110'" severity error;
 
@@ -206,7 +206,7 @@ begin
         end loop;
 
 
-        DataIn <= "1111000";
+        DataIn <= "1001110";
         wait for 1 ns;
         assert DataOut = "1110" report "DataOut is wrong for input '1111000'" severity error;
 
