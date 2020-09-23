@@ -4,6 +4,8 @@ use ieee.numeric_std.all;
 
 
 -- Hamming encoder
+-- This IP encodes a 4-bit message using Hamming encoding, in order to make it resilient to 1-bit errors. In order to
+-- come back to the original input, it should be used along with the HammingDecoder IP.
 --
 -- Inputs:
 --     DataIn is a 4-bit data input, to be hamming-encoded

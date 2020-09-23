@@ -7,7 +7,7 @@ SIMTIME ?= 100ns
 # Maximum tolerance assertion level (errors will be triggered for this error type & above)
 ASSERTLVL ?= warning
 # Flag to indicate if an error should be produced on simulation fail
-ERROREXIT = 0
+ERROREXIT ?= 0
 
 
 # Source HDL files
