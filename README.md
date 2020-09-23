@@ -6,11 +6,8 @@ Inspired by [Ben Eater](https://www.youtube.com/watch?v=h0jloehRKas&ab_channel=B
 
 ## About this IP
 
-This IP implements a simple encoder-decoder pair using [Hamming codes](https://en.wikipedia.org/wiki/Hamming_code\
-                                                                       #:~:text=In%20computer%20science%20and%20\
-                                                                       telecommunication,without%20detection%20of%20\
-                                                                       uncorrected%20errors.)
-to encode a 4-bit message (which will soon be extended to account for messages of arbitrary length) in order to make it
+This IP implements a simple encoder-decoder pair using [Hamming codes](https://en.wikipedia.org/wiki/Hamming_code) to
+encode a 4-bit message (which will soon be extended to account for messages of arbitrary length) in order to make it
 resilient to 1-bit errors.
 
 
