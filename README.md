@@ -7,8 +7,8 @@ Inspired by [Ben Eater](https://www.youtube.com/watch?v=h0jloehRKas&ab_channel=B
 ## About this IP
 
 This IP implements a simple encoder-decoder pair using [Hamming codes](https://en.wikipedia.org/wiki/Hamming_code) to
-encode a 4-bit message (which will soon be extended to account for messages of arbitrary length) in order to make it
-resilient to 1-bit errors.
+encode ~~a 4-bit message~~ a message of **arbitrary length** in order to make it resilient to 1-bit errors.
+Specifically, 1-bit errors can always be corrected automatically, and 2-or-more-bit errors can be detected.
 
 
 ## How to use
@@ -31,72 +31,136 @@ The two IPs will then be compiled and unit tests will run for each IP in order t
 _Note: this is not an in-depth mathematical explanation. For more details, visit the links at the beginning of this
 README._
 
-Let us take a 4-bit message as an example to demonstrate how Hamming codes work. A very basic idea for error-resilience
-is to check for parity: for every bit, we could have another bit that ensures that the total number of 1s in the 
-message is a pair number. However, this doubles the size of the message we have to send, and also can be very
-ambiguous: how can we tell if the "noisy" bit (the bit that has flipped during transfer) is the parity bit or the real
-bit?
+Let us take a 8-bit message block in order to examine how this codec works. For reasons that will become apparent
+later, for a block of size `X` only `X - log2(X) - 1` bits can actually be used for the message itself; the other
+bits will be used for parity.
 
-We could try to replace this parity bit with two copies of the original bit (for every bit), and then collapse the 3
-bits to 1 bit, the value of which is the "majority vote" among the values of the 3 bits (if at most one flips, then the
-other two should stay the same). However this is very inefficient space-wise, as we are effectively tripling the memory
-footprint of our message.
+Bit `0` is always used for global parity (parity amongst _all_ the bits of the block); bits whose index is a power of
+two - that is to say, bits `1`, `2` and `4` in this case - are used for _Hamming parity_. The block layout is displayed
+on the following table:
 
-A more clever way to tackle this problem would be to use "groups" of parity in order to determine which bit has
-flipped. Consider for example the following configuration, where `D` bits refer to data bits and `P` bits refer to
-parity bits:
+<table>
+    <tr>
+        <td>GP</td>
+        <td>P1</td>
+    </tr>
+    <tr>
+        <td>P2</td>
+        <td>D1</td>
+    </tr>
+    <tr>
+        <td>P3</td>
+        <td>D2</td>
+    </tr>
+    <tr>
+        <td>D3</td>
+        <td>D4</td>
+    </tr>
+</table>
 
-| P2 | P1 | P0 | D3 | D2 | D1 | D0 |
-|----|----|----|----|----|----|----|
-|    |    | x  | x  |    | x  | x  |
-|    | x  |    | x  | x  |    | x  |
-| x  |    |    | x  | x  | x  |    |
+`GP` is the global parity bit, `Px` are Hamming parity bits and `Dx` are data (or message) bits.
 
-What this table describes is three parity bits, which ensure parity as follows:
+Hamming parity bits ensure parity over specific groups of bits. For example, `P1` ensures parity amongst `D1`, `D2` and
+`D4`. This allows us to sort of _binary-search_ the message block in order to pinpoint 1-bit errors efficiently. Blocks
+are thus split in the following fashion:
 
-- `P0` ensures parity for `D0`, `D1` and `D3`
-- `P1` ensures parity for `D0`, `D2` and `D3`
-- `P2` ensures parity for `D1`, `D2` and `D3`
+<table>
+    <tr>
+        <td>GP</td>
+        <td><strong>P1</strong></td>
+    </tr>
+    <tr>
+        <td>P2</td>
+        <td><strong>D1</strong></td>
+    </tr>
+    <tr>
+        <td>P3</td>
+        <td><strong>D2</strong></td>
+    </tr>
+    <tr>
+        <td>D3</td>
+        <td><strong>D4</strong></td>
+    </tr>
+</table>
 
-For example, the message `1011` would be encoded as follows:
+<table>
+    <tr>
+        <td>GP</td>
+        <td>P1</td>
+    </tr>
+    <tr>
+        <td><strong>P2</strong></td>
+        <td><strong>D1</strong></td>
+    </tr>
+    <tr>
+        <td>P3</td>
+        <td>D2</td>
+    </tr>
+    <tr>
+        <td><strong>D3</strong></td>
+        <td><strong>D4</strong></td>
+    </tr>
+</table>
 
-- `P0 = 1`, because there are three 1s among `D0`, `D1` and `D3` (`D0 = 1`, `D1 = 1` and `D3 = 1`)
-- `P1 = 0`, because there are two 1s among `D0`, `D2` and `D3` (`D0 = 1` and `D3 = 1`)
-- `P2 = 0`, because there are two 1s among `D1`, `D2` and `D3` (`D1 = 1` and `D3 = 1`)
+<table>
+    <tr>
+        <td>GP</td>
+        <td>P1</td>
+    </tr>
+    <tr>
+        <td>P2</td>
+        <td>D1</td>
+    </tr>
+    <tr>
+        <td><strong>P3</strong></td>
+        <td><strong>D2</strong></td>
+    </tr>
+    <tr>
+        <td><strong>D3</strong></td>
+        <td><strong>D4</strong></td>
+    </tr>
+</table>
 
-So `1011` would be encoded as `0011011`.
+By `XOR`ing bits in each parity group we can detect which groups have the wrong parity, and their overlap allows us to
+pinpoint _exactly_ which bit caused the parity error.
 
-In order to decode it, we first must determine which of the three groups, associated to the three parity bits, are
-"triggered" (meaning that an error is detected in them). In order to do that, we can simply `XOR` the elements of each
-group:
+The groups themselves are formed by following a very simple rule: for `n` from `0` to `log2(X) - 1`, where `X` is the
+block size, Hamming parity group `n` consists of all the bits whose index's `n`th bit is equal to `1`. For example, for
+the first parity group (meaning we have to "look" at bit `0`, the LSB) in the previous example, we have: 
 
-- `group1 = D0 xor D1 xor D3 xor P0`
-- `group2 = D0 xor D2 xor D3 xor P1`
-- `group3 = D1 xor D2 xor D3 xor P2`
+<table>
+    <tr>
+        <td>000</td>
+        <td><strong>001</strong></td>
+    </tr>
+    <tr>
+        <td>010</td>
+        <td><strong>011</strong></td>
+    </tr>
+    <tr>
+        <td>100</td>
+        <td><strong>101</strong></td>
+    </tr>
+    <tr>
+        <td>110</td>
+        <td><strong>111</strong></td>
+    </tr>
+</table>
 
-In this case, `group1 = 0` (four 1s), `group2 = 0` (two 1s) and `group3 = 0` (two 1s). No errors are detected, as
-expected.
+In order to perform the decoding, we must first `XOR` the elements of each parity group together. If we then form a
+vector whose bits are the results of the previous `XOR`s, with the first parity group corresponding to bit `0`, the
+second corresponding to bit `1` etc, this vector will give us the index of the erroneous bit in the message block.
 
-To come back to the original message, we can just `AND` all three groups, in all possible "triggered" configurations,
-and simply `XOR` them with the corresponding data bit in order to find out if the bit should be flipped back or not.
+If the index of the erroneous bit is non-zero, we should first correct it (by flipping it) and then verify the global
+parity of the message block using bit `0`. If the global parity is correct, then there was only one error, and we
+successfully corrected it. If not, then there is at least one more error, which cannot be pinpointed, and thus the
+decoder IP should communicate an error code to the user.
 
-For example, if groups 1 and 2, but not group 3, have been triggered, that means that `D0` (the only data bit present
-in groups 1 and 2 but not in 3) is wrong and should be flipped. In boolean logic, this can be translated to:
+If the index of the erroneous bit is zero and the global parity is correct, then there is no error. If, on the other
+hand, the global parity is incorrect, then there are at least two errors, and the IP should once again communicate an
+error code to the user.
 
-```
-D0_out = (group1 AND group2 AND (NOT group3)) XOR D0
-```
-
-If we apply the same logic to the other data bits, we get:
-```
-D0_out = (group1       AND group2       AND (NOT group3)) XOR D0
-D1_out = (group1       AND (NOT group2) AND group3)       XOR D1
-D2_out = ((NOT group1) AND group2       AND group3)       XOR D2
-D3_out = (group1       AND group2       AND group3)       XOR D3
-```
-
-Thus, if we decode `0011011` following that logic we come back to `1011`.
-
-If, however, we flip the LSB, for example transforming the encoded message to `0011010`, we can see that groups 1 and 2
-are "triggered" (`group1 = 1` and `group2 = 1`), which will cause bit 0 to be flipped in the decoder, thus transforming
-it back to a 1 and getting the correct version of the original message.
+Finally, for a block of size 256 (bits) this method of encoding is very efficient, as it only uses 3.5% of the message
+block for parity checks, and leaves the remaining 96.5% for useful message data. This IP limits the maximum block size
+to 256 bits however, because even though Hamming codes become more efficient as the block size increases, the blocks
+themselves also become more vulnerable to more-than-one-bit errors, which this IP cannot recover from.
