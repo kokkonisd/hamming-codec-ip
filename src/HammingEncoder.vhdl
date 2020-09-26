@@ -5,14 +5,17 @@ use ieee.math_real.all;
 
 
 -- Hamming encoder
--- This IP encodes a 4-bit message using Hamming encoding, in order to make it resilient to 1-bit errors. In order to
--- come back to the original input, it should be used along with the HammingDecoder IP.
+-- This IP encodes a message using Hamming encoding, in order to make it resilient to 1-bit errors. In order to come 
+-- back to the original input, it should be used along with the HammingDecoder IP.
 --
 -- Inputs:
---     DataIn is a 4-bit data input, to be hamming-encoded
+--     BlockSize: the size of the message block; not all of it will be used to contain a message, as some of it will
+--                be used for parity bits. Specifically, `ceil(log2(BlockSize)) + 1` will be used for parity bits, and
+--                the rest can be used for the message. Power of 2 sizes should be preferred for the block size.
+--     DataIn   : a data input, to be hamming-encoded (`BlockSize - (ceil(log2(BlockSize)) + 1)` bits long)
 -- Outputs:
---     DataOut is a 7-bit data output, containing the hamming encoding of DataIn. Bits 0, 1 and 3 are parity, bits 2
---     and 4 through 6 correspond to DataIn bits 0 through 3 respectively.
+--     DataOut: a `BlockSize`-bit data output, containing the hamming encoding of DataIn. Bit 0 as well as all bits
+--              whose index is a power of 2 (1, 2, 4, 8 etc) will be used as parity bits.
 --
 -- Written by D. Kokkonis (@kokkonisd)
 
@@ -33,21 +36,22 @@ architecture default of HammingEncoder is
     signal encoded_data : std_logic_vector ((BlockSize - 1) downto 0);
 begin
 
-    encoding: process(DataIn)
+    encoding: process (DataIn)
         -- Counter variable
-        variable j : integer := 0;
+        variable j : integer;
         -- Variable to help index bits of counter
         variable bit_index : std_logic_vector (7 downto 0);
         -- Variable to help calculate powers of 2 via shifting
         variable pow_2_index : std_logic_vector (7 downto 0);
         -- Variable to help calculate parity
         variable parity : std_logic;
-        -- Scratch vector to hold the result of all calculations
+        -- Vector to hold the result of the encoding, used as a scratch buffer
         variable scratch_vector : std_logic_vector ((BlockSize - 1) downto 0);
     begin
         -- Initialize output vector to 0
         scratch_vector := (others => '0');
 
+        -- Check that input is valid
         if (DataIn /= (DataIn'range => 'U')) then
             -- Initialize output vector with input message values
             j := 0;
