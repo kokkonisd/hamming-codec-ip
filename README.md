@@ -1,5 +1,7 @@
 # Hamming codec IP
 
+![CI](https://github.com/kokkonisd/hamming-codec-ip/workflows/CI/badge.svg)
+
 Inspired by [Ben Eater](https://www.youtube.com/watch?v=h0jloehRKas&ab_channel=BenEater) and
 [Grant Sanderson (3blue1brown)](https://www.youtube.com/watch?v=X8jsijhllIA&ab_channel=3Blue1Brown).
 
