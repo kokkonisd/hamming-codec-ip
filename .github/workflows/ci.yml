@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install ghdl
+      run: sudo apt-get install ghdl
+    - name: Install gtkwave
+      run: sudo apt-get install gtkwave
+    - name: make
+      run: ERROREXIT=1 make
