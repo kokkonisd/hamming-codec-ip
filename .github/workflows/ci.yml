@@ -14,8 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install ghdl
-      run: sudo apt-get install wget
-      run: wget https://gist.github.com/0e15bca727730501990fd76a1c9af023 && sh ./install-ghdl-ubuntu.sh 
+      run: |
+        sudo apt-get install wget
+        wget https://gist.github.com/0e15bca727730501990fd76a1c9af023 && sh ./install-ghdl-ubuntu.sh 
     - name: Install gtkwave
       run: sudo apt-get install gtkwave
     - name: make
