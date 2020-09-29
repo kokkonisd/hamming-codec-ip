@@ -8,31 +8,36 @@ SIMTIME ?= 100ns
 ASSERTLVL ?= warning
 # Flag to indicate if an error should be produced on simulation fail
 ERROREXIT ?= 0
-
+# Source code directory
+SRC = src
+# Test bench directory
+TB = tb
+# Simulation file directory
+SIMU = simu
 
 # Source HDL files
-SOURCES = $(patsubst src/%.vhdl, %, $(wildcard src/*.vhdl))
+SOURCES = $(patsubst $(SRC)/%.vhdl, %, $(wildcard $(SRC)/*.vhdl))
 
 
 all: $(SOURCES)
 
 
-%: src/%.vhdl tb/%_tb.vhdl
+%: $(SRC)/%.vhdl $(TB)/%_tb.vhdl
 	@echo ""
 	@echo "\033[0;33m[Compiling \`$@.vhdl\` & \`$@_tb.vhdl\` ...]\033[0m"
-	$(GHDL) -s src/$@.vhdl tb/$@_tb.vhdl
-	$(GHDL) -a src/$@.vhdl tb/$@_tb.vhdl
+	$(GHDL) -s $(SRC)/$@.vhdl $(TB)/$@_tb.vhdl
+	$(GHDL) -a $(SRC)/$@.vhdl $(TB)/$@_tb.vhdl
 	$(GHDL) -e $@_tb
 
 	@echo "\033[0;33m[Running simulation of \`$@_tb\` ...]\033[0m"
-	$(GHDL) -r $@_tb --vcd=simu/$@.vcd --assert-level=$(ASSERTLVL) --stop-time=$(SIMTIME) && \
+	$(GHDL) -r $@_tb --vcd=$(SIMU)/$@.vcd --assert-level=$(ASSERTLVL) --stop-time=$(SIMTIME) && \
 		echo "\033[0;32m[\`$@\` PASS]\033[0m" || (echo "\033[0;31m[\`$@\` FAIL]\033[0m"; exit $(ERROREXIT))
 	
 	@echo ""
 
 
 clean:
-	rm -rf *.cf simu/*.vcd *_tb *.o
+	rm -rf *.cf $(SIMU)/*.vcd *_tb *.o
 
 
 .PHONY: all clean
