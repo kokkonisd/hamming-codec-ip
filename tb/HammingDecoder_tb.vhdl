@@ -82,6 +82,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -114,6 +115,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -146,6 +148,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -178,6 +181,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -210,6 +214,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -242,6 +247,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -274,6 +280,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -306,6 +313,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -338,6 +346,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -370,6 +379,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -402,6 +412,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -434,6 +445,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -466,6 +478,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;            
 
@@ -498,6 +511,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
@@ -530,6 +544,7 @@ begin
                     assert ErrorCode = '1' report "Error code should be KO for complex noisy input" severity error;
                     -- Un-flip bit
                     DataIn(j) <= not DataIn(j);
+                    wait for 1 ps;
                 end if;
             end loop;
 
